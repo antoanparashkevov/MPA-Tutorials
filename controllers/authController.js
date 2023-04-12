@@ -27,7 +27,7 @@ router.post('/register',
     const formData = req.body;
     console.log('formData (register) >>>', formData);
     try {
-        const errors = validationResult(req);
+        const { errors } = validationResult(req);
         
         if( errors ) {
             throw errors
@@ -61,13 +61,26 @@ router.get('/login', isGuest(), (req, res) => {
     })
 })
 
-router.post('/login', isGuest(), async (req, res) => {
+router.post('/login', 
+    isGuest(),
+    body('username')
+        .isLength({min: 5})
+        .withMessage('Username must be at least 5 characters long!')
+        .isAlphanumeric()
+        .withMessage('Username must contain only english letters or digits!'),
+    body('password')
+        .isLength({min: 5})
+        .withMessage('Password must be at least 5 characters long!')
+        .isAlphanumeric()
+        .withMessage('Password must container only english letters or digits!'),
+    async (req, res) => {
     const formData = req.body;
     console.log('formData (login) >>> ', formData)
     try {
+        const { errors } = validationResult(req);
         
-        if( formData.username === '' || formData.password === '' ) {
-            throw new Error('All fields are required!')
+        if( errors ) {
+            throw errors;
         }
         
         const token = await login(formData.username, formData.password);
