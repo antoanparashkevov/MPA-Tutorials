@@ -30,11 +30,17 @@ const courseSchema = new Schema({
     },
     createdAt: {
         type: String,
-        required: true
+        required: true,
+        default: () => (new Date()).toISOString().slice(0,10)
     },
     enrolledUsers: {
         type: [ObjectId],
         default: [],
+        ref: 'User'
+    },
+    owner: {
+        type: ObjectId,
+        required: true,
         ref: 'User'
     }
 })
