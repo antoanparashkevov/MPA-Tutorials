@@ -29,7 +29,7 @@ router.post('/register',
     try {
         const { errors } = validationResult(req);
         
-        if( errors ) {
+        if( errors.length > 0 ) {
             throw errors
         }
         
@@ -40,7 +40,7 @@ router.post('/register',
         const token = await register(formData.username, formData.password);
         
         res.cookie('token', token);
-        res.redirect('/');//TODO see the assigment
+        res.redirect('/');
     } catch ( error ) {
         const errors = parseError(error);
         
@@ -79,13 +79,13 @@ router.post('/login',
     try {
         const { errors } = validationResult(req);
         
-        if( errors ) {
+        if( errors.length > 0 ) {
             throw errors;
         }
         
         const token = await login(formData.username, formData.password);
         res.cookie('token', token);
-        res.redirect('/')//TODO see the assignment
+        res.redirect('/')
     } catch ( error ) {
         const errors = parseError(error);
         
@@ -101,7 +101,7 @@ router.post('/login',
 
 router.get('/logout', (req,res) => {
     res.clearCookie('token');
-    res.redirect('/')//TODO see the assignment
+    res.redirect('/')
 })
 
 module.exports = router;
