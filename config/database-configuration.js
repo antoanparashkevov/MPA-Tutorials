@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const CONNECTION_STRING = 'mongodb://localhost:27017/scaffold';//TODO replace with real database name
+const CONNECTION_STRING = 'mongodb://localhost:27017/tutorials';//TODO replace with real database name
 
 module.exports = async (app) => {
     try {
