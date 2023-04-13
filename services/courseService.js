@@ -1,7 +1,11 @@
 const Course = require('../models/Course')
 
 async function getAllByDate() {
-    return Course.find({}).sort({createdAt: 1}).lean();
+    return Course.find({}).sort({createdAt: 1}).lean();//asc
+}
+
+async function getRecent() {
+    return Course.find({}).sort( {userCount: -1 }).limit(3).lean()//desc
 }
 
 async function getAll() {
@@ -26,6 +30,7 @@ async function deleteById(courseId) {
 
 module.exports = {
     getAllByDate,
+    getRecent,
     getAll,
     getById,
     create,

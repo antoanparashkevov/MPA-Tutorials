@@ -4,8 +4,8 @@
          alt="Card image cap" width="400">
     <div class="card-body">
         <h4 class="card-title">{{title}}</h4>
-        {{#if user}}
-            <small class="float-right">Enrolled: {{enrolledUsers.length}}</small>
-        {{/if}}
+        {{#unless user}}
+            <small class="float-right">Enrolled: {{userCount}}</small>
+        {{/unless}}
     </div>
 </div>

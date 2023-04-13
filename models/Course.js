@@ -38,6 +38,10 @@ const courseSchema = new Schema({
         default: [],
         ref: 'User'
     },
+    userCount: {
+        type: Number,
+        default: 0
+    },
     owner: {
         type: ObjectId,
         required: true,
