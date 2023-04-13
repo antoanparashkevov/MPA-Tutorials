@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const parseError = require('../util/errorParser');
-const { create, getById } = require("../services/courseService");
+const { create, getById, deleteById, update } = require("../services/courseService");
 
 router.get('/create', (req,res)=>{
     res.render('create',{
@@ -53,6 +53,78 @@ router.get('/:id/details', async (req, res) => {
         res.render('details', {
             title: 'Details page',
             errors
+        })
+    }
+})
+
+router.get('/:id/delete', async (req, res) => {
+    try {
+        const course = await getById(req.params.id);
+        
+        if( course.owner.toString() !== req.user._id) {
+            return res.redirect('/auth/login')
+        }
+        
+        await deleteById(req.params.id);
+        res.redirect('/')
+     
+        
+    } catch ( error ) {
+        const errors = parseError(error)
+
+        res.render('details', {
+            title: 'Details page',
+            errors
+        })
+    }
+})
+
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const course = await getById(req.params.id);
+        
+        if( course.owner.toString() !== req.user._id) {
+            return res.redirect('/auth/login')
+        }
+        
+        res.render('edit', {
+            title: 'Details page',
+            course
+        })
+     
+    } catch ( error ) {
+        const errors = parseError(error)
+
+        res.render('details', {
+            title: 'Details page',
+            errors
+        })
+    }
+})
+
+router.post('/:id/edit', async (req, res) => {
+    const formData = req.body;
+    console.log('formData (edit) >>> ', formData);
+    
+    try {
+        const course = await getById(req.params.id);
+        
+        if( course.owner.toString() !== req.user._id) {
+            return res.redirect('/auth/login')
+        }
+       
+        await update(req.params.id, formData);
+        res.redirect('/course/' + req.params.id + '/details')
+    } catch ( error ) {
+        const errors = parseError(error)
+
+        res.render('edit', {
+            title: 'Details page',
+            errors,
+            course: { 
+                ...formData,
+                _id: req.params.id
+            }
         })
     }
 })
