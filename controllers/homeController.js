@@ -5,8 +5,6 @@ router.get('/', async(req, res) => {
     let view;
     let courses = [];
     
-    console.log('query >>> ', req.query)
-    
     if( req.user ) {
         view = 'user-home'
         courses = await getAllByDate(req.query.search);

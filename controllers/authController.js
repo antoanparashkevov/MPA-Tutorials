@@ -25,7 +25,7 @@ router.post('/register',
         .withMessage('Password must container only english letters or digits!'),
     async (req,res) => {
     const formData = req.body;
-    console.log('formData (register) >>>', formData);
+    
     try {
         const { errors } = validationResult(req);
         
@@ -75,7 +75,7 @@ router.post('/login',
         .withMessage('Password must container only english letters or digits!'),
     async (req, res) => {
     const formData = req.body;
-    console.log('formData (login) >>> ', formData)
+
     try {
         const { errors } = validationResult(req);
         

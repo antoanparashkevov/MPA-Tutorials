@@ -11,7 +11,7 @@ router.get('/create', (req,res)=>{
 
 router.post('/create', async (req,res) => {
     const formData = req.body;
-    console.log('formData (create) >>> ', formData);
+    
     const course = {
         title: formData.title,
         description: formData.description,
@@ -106,7 +106,6 @@ router.get('/:id/edit', async (req, res) => {
 
 router.post('/:id/edit', async (req, res) => {
     const formData = req.body;
-    console.log('formData (edit) >>> ', formData);
     
     try {
         const course = await getById(req.params.id);
