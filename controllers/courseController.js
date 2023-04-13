@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const parseError = require('../util/errorParser');
-const { create } = require("../services/courseService");
+const { create, getById } = require("../services/courseService");
 
 router.get('/create', (req,res)=>{
     res.render('create',{
@@ -33,6 +33,28 @@ router.post('/create', async (req,res) => {
         })
     }
    
+})
+
+router.get('/:id/details', async (req, res) => {
+    try {
+        const course = await getById(req.params.id);
+        
+        if( course.owner.toString() === req.user._id ) {
+            course.isOwner = true;
+        }
+        
+        res.render('details', {
+            title: course.title,
+            course
+        })
+    } catch ( error ) {
+        const errors = parseError(error)
+
+        res.render('details', {
+            title: 'Details page',
+            errors
+        })
+    }
 })
 
 module.exports = router;
