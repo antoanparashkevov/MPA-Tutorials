@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const parseError = require('../util/errorParser');
-const { create, getById, deleteById, update } = require("../services/courseService");
+const { create, getById, deleteById, update, enrollUser } = require("../services/courseService");
 
 router.get('/create', (req,res)=>{
     res.render('create',{
@@ -42,6 +42,8 @@ router.get('/:id/details', async (req, res) => {
         if( course.owner.toString() === req.user._id ) {
             course.isOwner = true;
         }
+        
+        course.enrolled = course.enrolledUsers.map(u => u.toString()).includes(req.user._id)
         
         res.render('details', {
             title: course.title,
@@ -119,12 +121,35 @@ router.post('/:id/edit', async (req, res) => {
         const errors = parseError(error)
 
         res.render('edit', {
-            title: 'Details page',
+            title: 'Edit page',
             errors,
             course: { 
                 ...formData,
                 _id: req.params.id
             }
+        })
+    }
+})
+
+router.get('/:id/enroll', async (req, res) => {
+    try {
+        const course = await getById(req.params.id);
+        
+        if( 
+            course.owner.toString() === req.user._id || 
+            course.enrolledUsers.map(x => x.toString()).includes(req.user._id.toString())
+        ) {
+            return res.redirect('/course/' + req.params.id + '/details')
+        }
+       
+        await enrollUser(req.params.id, req.user._id);
+        res.redirect('/course/' + req.params.id + '/details')
+    } catch ( error ) {
+        const errors = parseError(error)
+
+        res.render('details', {
+            title: 'Details page',
+            errors,
         })
     }
 })
