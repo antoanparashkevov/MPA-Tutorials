@@ -1,17 +1,12 @@
 const Course = require('../models/Course')
 
 async function getAllByDate(search) {
+    const query = {}
     if( search ) {
-        return Course.find({ title: search }).collation(
-            {locale: 'en', strength: 2}
-        ).
-        sort(
-            {createdAt: 1}
-        )
-        .lean();//asc
-    } else {
-        return Course.find({}).sort({createdAt: 1}).lean();//asc
+        query.title = new RegExp(search, 'i');
     }
+    
+    return Course.find(query).sort({createdAt: 1}).lean();//asc
     
 }
 
